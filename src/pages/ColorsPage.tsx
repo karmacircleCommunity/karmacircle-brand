@@ -1,10 +1,12 @@
 import ColorSwatch from "../components/ColorSwatch";
+import PageFooterNav from "../components/PageFooterNav";
 import { COLOR_GROUPS } from "../data/tokens";
 
-const Colors = () => {
+const ColorsPage = () => {
   return (
-    <section id="colors">
+    <div className="page">
       <div className="section-head">
+        <p className="eyebrow">Foundations</p>
         <h2>Color</h2>
         <p>
           Clay over warm near-black, not the saturated orange this app
@@ -23,10 +25,16 @@ const Colors = () => {
               <ColorSwatch key={token.token} token={token} />
             ))}
           </div>
+          <p className="usage-note">
+            <span>Usage</span>
+            {group.usage}
+          </p>
         </div>
       ))}
-    </section>
+
+      <PageFooterNav currentId="colors" />
+    </div>
   );
 };
 
-export default Colors;
+export default ColorsPage;

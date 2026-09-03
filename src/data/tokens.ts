@@ -11,6 +11,7 @@ export interface ColorGroup {
   id: string;
   title: string;
   description: string;
+  usage: string;
   tokens: ColorToken[];
 }
 
@@ -20,6 +21,8 @@ export const COLOR_GROUPS: ColorGroup[] = [
     title: "Brand",
     description:
       "The one place to edit to retheme the app. Reserved for CTAs, links, active state, not decoration.",
+    usage:
+      "Primary buttons, active nav/tab state, links, focus rings. Never a background fill for large areas - it stays rare so it still means something when it shows up.",
     tokens: [
       { name: "Brand", token: "--color-brand", hex: "#a8623e" },
       { name: "Brand hover", token: "--color-brand-hover", hex: "#8f5236" },
@@ -35,6 +38,8 @@ export const COLOR_GROUPS: ColorGroup[] = [
     title: "Semantic",
     description:
       "Toasts, badges, validation. Muted on purpose, none of them fight the brand accent for attention.",
+    usage:
+      "Toast copy/icons, status pills, form validation. Each pairs with a 14%-mix background of itself rather than a flat fill, so status color reads as a tint, not a block.",
     tokens: [
       { name: "Success", token: "--color-success", hex: "#2e6b4a" },
       { name: "Error", token: "--color-error", hex: "#a8402f" },
@@ -47,6 +52,8 @@ export const COLOR_GROUPS: ColorGroup[] = [
     title: "Neutrals & surface",
     description:
       "Two page grounds, a warm cream for light, a near-black for full-bleed dark panels, plus the grays between them.",
+    usage:
+      "Ink and Heading carry body text and titles. Surface/Surface dark are the page background in each theme. Surface muted and Border muted separate cards and inputs from that background without a hard black border.",
     tokens: [
       { name: "Ink", token: "--color-ink", hex: "#212529" },
       { name: "Heading", token: "--color-heading", hex: "#28183b" },
@@ -74,50 +81,149 @@ export const COLOR_GROUPS: ColorGroup[] = [
 ];
 
 export interface RadiusToken {
-  label: string;
+  className: string;
   radius: string;
+  usage: string;
 }
 
 export const RADIUS_TOKENS: RadiusToken[] = [
-  { label: "5px", radius: "5px" },
-  { label: "10px", radius: "10px" },
-  { label: "15px", radius: "15px" },
-  { label: "xl / 12px", radius: "12px" },
-  { label: "full", radius: "38px" },
+  {
+    className: "rounded-5px",
+    radius: "5px",
+    usage: "Compact controls - nav pills, dashboard chips, small badges.",
+  },
+  {
+    className: "rounded-10px",
+    radius: "10px",
+    usage: "Inputs, floating action buttons, mid-size panels.",
+  },
+  {
+    className: "rounded-15px",
+    radius: "15px",
+    usage: "Cards and larger content surfaces - the largest step on the scale.",
+  },
 ];
 
-export interface TypeScaleRow {
+export interface BorderToken {
+  name: string;
   token: string;
+  swatch: string;
+  usage: string;
+}
+
+export const BORDER_TOKENS: BorderToken[] = [
+  {
+    name: "Border",
+    token: "--border",
+    swatch: "var(--border)",
+    usage: "Default hairline around cards, swatches, and dividers between sections.",
+  },
+  {
+    name: "Border soft",
+    token: "--border-soft",
+    swatch: "var(--border-soft)",
+    usage: "Quieter separator - inside a card, between rows in a table, never the outer edge.",
+  },
+];
+
+export interface ShadowToken {
+  name: string;
+  token: string;
+  value: string;
+  usage: string;
+}
+
+export const SHADOW_TOKENS: ShadowToken[] = [
+  {
+    name: "Shadow",
+    token: "--shadow",
+    value: "0 24px 48px -28px rgba(56, 44, 36, 0.28)",
+    usage:
+      "One elevation, used sparingly - a swatch on hover, a toast, the search palette. Not a scale: if something needs more lift than this, it's a sign the layout needs rethinking, not a bigger shadow.",
+  },
+];
+
+export interface TypeGroupRow {
+  className: string;
   sample: string;
   fontSize: string;
   fontWeight?: number;
   uppercase?: boolean;
+  usage: string;
 }
 
-export const TYPE_SCALE: TypeScaleRow[] = [
+export interface TypeGroup {
+  id: string;
+  title: string;
+  family: string;
+  /** Where to actually get the typeface - Google Fonts' own specimen page. */
+  familyUrl: string;
+  description: string;
+  rows: TypeGroupRow[];
+}
+
+export const TYPE_GROUPS: TypeGroup[] = [
   {
-    token: "text-4xl / 2rem",
-    sample: "Organizations near you",
-    fontSize: "2.1rem",
+    id: "headings",
+    title: "Headings",
+    family: "Outfit",
+    familyUrl: "https://fonts.google.com/specimen/Outfit",
+    description: "Structure - the wordmark, section titles, anything that introduces content.",
+    rows: [
+      {
+        className: "text-4xl",
+        sample: "Organizations near you",
+        fontSize: "2.1rem",
+        fontWeight: 600,
+        usage: "Page-level titles - one per page.",
+      },
+      {
+        className: "text-2xl",
+        sample: "Organizations near you",
+        fontSize: "1.5rem",
+        fontWeight: 600,
+        usage: "Section headings within a page.",
+      },
+    ],
   },
-  { token: "text-2xl", sample: "Color Palette", fontSize: "1.5rem" },
   {
-    token: "text-body-lg / 17px",
-    sample: "A short lead sentence that opens a section.",
-    fontSize: "1.0625rem",
-    fontWeight: 400,
+    id: "body",
+    title: "Body",
+    family: "Poppins",
+    familyUrl: "https://fonts.google.com/specimen/Poppins",
+    description: "Voice - paragraphs, forms, anything meant to be read at length.",
+    rows: [
+      {
+        className: "text-body-lg",
+        sample: "Organizations near you",
+        fontSize: "1.0625rem",
+        fontWeight: 400,
+        usage: "Lede paragraphs directly under a heading.",
+      },
+      {
+        className: "text-body",
+        sample: "Organizations near you",
+        fontSize: "0.9375rem",
+        fontWeight: 400,
+        usage: "Default paragraph, label, and input text.",
+      },
+    ],
   },
   {
-    token: "text-body / 15px",
-    sample: "Standard paragraph and form copy.",
-    fontSize: "0.9375rem",
-    fontWeight: 400,
-  },
-  {
-    token: "text-caption / 10px",
-    sample: "Eyebrow label",
-    fontSize: "0.72rem",
-    uppercase: true,
+    id: "label",
+    title: "Label",
+    family: "Outfit",
+    familyUrl: "https://fonts.google.com/specimen/Outfit",
+    description: "Small, uppercase, and load-bearing rather than decorative.",
+    rows: [
+      {
+        className: "text-caption",
+        sample: "Organizations near you",
+        fontSize: "0.72rem",
+        uppercase: true,
+        usage: "Eyebrow tags, timestamps, tertiary metadata.",
+      },
+    ],
   },
 ];
 
@@ -145,11 +251,55 @@ export const DONT_ITEMS: DoDontItem[] = [
   { text: "Don't loop an animation on a surface someone is reading." },
 ];
 
-export const NAV_SECTIONS = [
-  { id: "overview", label: "Overview" },
-  { id: "colors", label: "Color" },
-  { id: "type", label: "Typography" },
-  { id: "shape", label: "Shape" },
-  { id: "components", label: "Components" },
-  { id: "voice", label: "Voice" },
-] as const;
+export interface NavPage {
+  id: string;
+  path: string;
+  label: string;
+  group: "Foundations" | "More";
+  description: string;
+}
+
+export const NAV_PAGES: NavPage[] = [
+  {
+    id: "overview",
+    path: "/",
+    label: "Overview",
+    group: "Foundations",
+    description: "The idea behind the mark, and what this system covers.",
+  },
+  {
+    id: "colors",
+    path: "/colors",
+    label: "Colors",
+    group: "Foundations",
+    description: "Brand, semantic, and neutral tokens, with their usage.",
+  },
+  {
+    id: "typography",
+    path: "/typography",
+    label: "Typography",
+    group: "Foundations",
+    description: "Outfit for structure, Poppins for voice.",
+  },
+  {
+    id: "materials",
+    path: "/materials",
+    label: "Materials",
+    group: "Foundations",
+    description: "Radius, border, and shadow tokens.",
+  },
+  {
+    id: "components",
+    path: "/components",
+    label: "Components",
+    group: "More",
+    description: "The tokens above, doing actual work.",
+  },
+  {
+    id: "voice",
+    path: "/voice",
+    label: "Voice",
+    group: "More",
+    description: "Writing guidelines, grounded in real incidents.",
+  },
+];

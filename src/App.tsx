@@ -1,38 +1,75 @@
-import Sidebar from "./components/Sidebar";
-import { NAV_SECTIONS } from "./data/tokens";
-import { useActiveSection } from "./hooks/useActiveSection";
+import { useCallback, useEffect, useState } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
+import { useLenis } from "lenis/react";
+import DocsLayout from "./layouts/DocsLayout";
+import CommandPalette from "./components/CommandPalette";
 import { useTheme } from "./hooks/useTheme";
-import Overview from "./sections/Overview";
-import Colors from "./sections/Colors";
-import Typography from "./sections/Typography";
-import Shape from "./sections/Shape";
-import Components from "./sections/Components";
-import Voice from "./sections/Voice";
-
-const SECTION_IDS = NAV_SECTIONS.map((section) => section.id);
+import OverviewPage from "./pages/OverviewPage";
+import ColorsPage from "./pages/ColorsPage";
+import TypographyPage from "./pages/TypographyPage";
+import MaterialsPage from "./pages/MaterialsPage";
+import ComponentsPage from "./pages/ComponentsPage";
+import VoicePage from "./pages/VoicePage";
 
 const App = () => {
   const { mode, setMode } = useTheme();
-  const activeId = useActiveSection(SECTION_IDS);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const location = useLocation();
+  const lenis = useLenis();
+
+  // React Router doesn't scroll-restore on navigation by itself, and a
+  // plain window.scrollTo would fight Lenis's own scroll loop - route the
+  // reset through the same instance instead.
+  useEffect(() => {
+    lenis?.scrollTo(0, { immediate: true });
+  }, [location.pathname, lenis]);
+
+  // Focusing an element that isn't fully in view (e.g. a sidebar control
+  // when the nav content is taller than a short viewport) makes the browser
+  // natively scroll it into view. Lenis mirrors native scroll into its own
+  // internal position on the same tick - except while it's mid an unrelated
+  // smooth-scroll animation, when it ignores the native change and later
+  // overwrites window.scrollY back to its stale target, leaving the page
+  // rendered at the wrong offset until the next manual scroll. Re-syncing
+  // Lenis's position to whatever the browser actually did closes that gap;
+  // any in-flight animation is abandoned in favor of the newer scroll,
+  // which matches what a user expects when a focus change jumps the page.
+  useEffect(() => {
+    if (!lenis) return;
+    const resync = () => lenis.resize();
+    window.addEventListener("focusin", resync);
+    return () => window.removeEventListener("focusin", resync);
+  }, [lenis]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      const isCombo = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k";
+      if (isCombo) {
+        event.preventDefault();
+        setSearchOpen((open) => !open);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  const openSearch = useCallback(() => setSearchOpen(true), []);
+  const closeSearch = useCallback(() => setSearchOpen(false), []);
 
   return (
-    <div className="shell">
-      <Sidebar activeId={activeId} themeMode={mode} onThemeChange={setMode} />
-      <main>
-        <Overview />
-        <Colors />
-        <Typography />
-        <Shape />
-        <Components />
-        <Voice />
-        <footer className="credit">
-          <span>KarmaCircle brand &amp; design system</span>
-          <a href="https://karmacircle.org" target="_blank" rel="noreferrer">
-            karmacircle.org
-          </a>
-        </footer>
-      </main>
-    </div>
+    <>
+      <Routes>
+        <Route element={<DocsLayout themeMode={mode} onThemeChange={setMode} onOpenSearch={openSearch} />}>
+          <Route index element={<OverviewPage />} />
+          <Route path="colors" element={<ColorsPage />} />
+          <Route path="typography" element={<TypographyPage />} />
+          <Route path="materials" element={<MaterialsPage />} />
+          <Route path="components" element={<ComponentsPage />} />
+          <Route path="voice" element={<VoicePage />} />
+        </Route>
+      </Routes>
+      <CommandPalette open={searchOpen} onClose={closeSearch} />
+    </>
   );
 };
 

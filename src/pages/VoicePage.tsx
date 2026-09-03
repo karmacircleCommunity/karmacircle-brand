@@ -1,8 +1,9 @@
+import PageFooterNav from "../components/PageFooterNav";
 import { DO_ITEMS, DONT_ITEMS } from "../data/tokens";
 
-const Voice = () => {
+const VoicePage = () => {
   return (
-    <section id="voice">
+    <div className="page">
       <div className="section-head">
         <h2>Voice &amp; guidelines</h2>
         <p>Grounded in real incidents from this codebase, not generic rules.</p>
@@ -25,8 +26,9 @@ const Voice = () => {
           </ul>
         </div>
       </div>
-    </section>
+      <PageFooterNav currentId="voice" />
+    </div>
   );
 };
 
-export default Voice;
+export default VoicePage;

@@ -1,6 +1,8 @@
-const Components = () => {
+import PageFooterNav from "../components/PageFooterNav";
+
+const ComponentsPage = () => {
   return (
-    <section id="components">
+    <div className="page">
       <div className="section-head">
         <h2>Components</h2>
         <p>The same tokens above, doing actual work.</p>
@@ -43,8 +45,9 @@ const Components = () => {
           </div>
         </div>
       </div>
-    </section>
+      <PageFooterNav currentId="components" />
+    </div>
   );
 };
 
-export default Components;
+export default ComponentsPage;
