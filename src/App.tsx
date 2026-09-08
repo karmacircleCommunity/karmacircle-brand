@@ -5,6 +5,7 @@ import DocsLayout from "./layouts/DocsLayout";
 import CommandPalette from "./components/CommandPalette";
 import { useTheme } from "./hooks/useTheme";
 import OverviewPage from "./pages/OverviewPage";
+import LogoPage from "./pages/LogoPage";
 import ColorsPage from "./pages/ColorsPage";
 import TypographyPage from "./pages/TypographyPage";
 import MaterialsPage from "./pages/MaterialsPage";
@@ -61,6 +62,7 @@ const App = () => {
       <Routes>
         <Route element={<DocsLayout themeMode={mode} onThemeChange={setMode} onOpenSearch={openSearch} />}>
           <Route index element={<OverviewPage />} />
+          <Route path="logo" element={<LogoPage />} />
           <Route path="colors" element={<ColorsPage />} />
           <Route path="typography" element={<TypographyPage />} />
           <Route path="materials" element={<MaterialsPage />} />

@@ -359,6 +359,122 @@ main {
   margin-top: 2px;
 }
 
+/* ---------- Logo ---------- */
+.logo-group {
+  margin-bottom: 48px;
+}
+.logo-group:last-of-type {
+  margin-bottom: 0;
+}
+.logo-group h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.logo-group-desc {
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+  margin: 0 0 20px;
+  max-width: 60ch;
+  line-height: 1.6;
+}
+.logo-group > p {
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+  margin: 20px 0 12px;
+}
+.logo-preview-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.logo-tile {
+  flex: 1;
+  min-width: 160px;
+  min-height: 120px;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+}
+.logo-tile.light {
+  background: #fffcf7;
+}
+.logo-tile.dark {
+  background: #0e0906;
+}
+.logo-tile-label {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+.logo-tile.light .logo-tile-label {
+  color: rgba(0, 0, 0, 0.4);
+}
+.logo-size-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 28px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.logo-size-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.logo-size-item span {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+}
+.logo-lockup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-lockup.stacked {
+  flex-direction: column;
+  gap: 8px;
+}
+.logo-lockup-word {
+  font-family: "Outfit", sans-serif;
+  font-weight: 500;
+  font-size: 1.15rem;
+}
+/* The tiles pin a fixed light/dark background regardless of the page's own
+   theme toggle, so the wordmark color has to be pinned right along with
+   it - `var(--heading)` would flip with the page theme and could land
+   light-on-light or dark-on-dark inside a tile that never changes. */
+.logo-tile.light .logo-lockup-word {
+  color: #28183b;
+}
+.logo-tile.dark .logo-lockup-word {
+  color: #f7ecdf;
+}
+.logo-clearspace {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-card);
+}
+.logo-clearspace-caption {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  margin: 12px 0 32px;
+  max-width: 46ch;
+}
+
 /* ---------- Colors ---------- */
 .color-group {
   margin-bottom: 40px;
@@ -594,7 +710,6 @@ main {
 .detail-table {
   display: flex;
   flex-direction: column;
-  border-top: 1px solid var(--border-soft);
 }
 .detail-head {
   display: none;

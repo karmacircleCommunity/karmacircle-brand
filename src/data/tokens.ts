@@ -268,6 +268,13 @@ export const NAV_PAGES: NavPage[] = [
     description: "The idea behind the mark, and what this system covers.",
   },
   {
+    id: "logo",
+    path: "/logo",
+    label: "Logo",
+    group: "Foundations",
+    description: "The mark and wordmark as real, exportable assets.",
+  },
+  {
     id: "colors",
     path: "/colors",
     label: "Colors",

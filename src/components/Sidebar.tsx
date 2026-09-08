@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import type { ThemeMode } from "../hooks/useTheme";
 import { NAV_PAGES } from "../data/tokens";
+import LogoMark from "./LogoMark";
 import ThemeToggle from "./ThemeToggle";
 
 interface SidebarProps {
@@ -17,10 +18,7 @@ const Sidebar = ({ themeMode, onThemeChange, onOpenSearch }: SidebarProps) => {
   return (
     <aside className="sidebar">
       <NavLink className="mark" to="/">
-        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
-          <circle cx="15" cy="15" r="13.5" stroke="var(--border)" strokeWidth="1" />
-          <circle cx="15" cy="3.5" r="2.6" fill="var(--brand)" />
-        </svg>
+        <LogoMark size={30} />
         <span>
           <span className="mark-word">KarmaCircle</span>
           <span className="mark-sub">Brand system</span>
