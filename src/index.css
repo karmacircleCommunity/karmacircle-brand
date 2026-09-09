@@ -152,6 +152,31 @@ button {
   white-space: nowrap;
   border: 0;
 }
+/* Off-screen until it receives keyboard focus (the very first Tab stop on
+   the page), then drops into view above everything else so a keyboard or
+   screen-reader user can jump past the sidebar's full nav list straight to
+   the page content. */
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  transform: translateY(-120%);
+  background: var(--brand);
+  color: var(--on-brand);
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-decoration: none;
+  padding: 12px 18px;
+  border-radius: 0 0 8px 0;
+  transition: transform 0.15s ease;
+}
+/* Plain :focus, not :focus-visible - this link is invisible-until-focused
+   by design, not a focus-ring-vs-pointer distinction, so it should reveal
+   for any focus method including one driven by assistive tech. */
+.skip-link:focus {
+  transform: translateY(0);
+}
 
 /* ---------- Shell (mobile-first: sidebar is a horizontal top bar until 980px) ---------- */
 .shell {
@@ -161,6 +186,20 @@ button {
 }
 
 /* ---------- Sidebar ---------- */
+/* Below the desktop breakpoint this wrapper contributes nothing to layout -
+   `.sidebar` itself is still the one sticky top bar it always was. From
+   980px up, `.sidebar-shell` becomes the real positioned box (see that
+   breakpoint below) and takes over sizing/position duties from `.sidebar`,
+   which shrinks to just the padded, potentially-collapsed panel inside it. */
+.sidebar-shell {
+  display: contents;
+}
+/* The collapse control lives outside the collapsible panel (`inert` below
+   980px is a no-op since `.sidebar-toggle` isn't rendered there at all) so
+   it's reachable even while the panel itself is hidden. */
+.sidebar-toggle {
+  display: none;
+}
 .sidebar {
   background: var(--bg-sidebar);
   border-bottom: 1px solid var(--border);
@@ -327,6 +366,7 @@ main {
 }
 .page.hero {
   padding-top: 56px;
+  position: relative;
 }
 
 .eyebrow {
@@ -365,9 +405,25 @@ main {
   font-size: 0.96rem;
 }
 
+/* ---------- Motion primitives ---------- */
+/* One entrance for the whole site: a short lift into place. Everything that
+   animates in uses this keyframe and differs only in delay, so nothing has to
+   invent its own easing. The reduced-motion block at the bottom of this file
+   is what switches all of it off. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* ---------- Hero ---------- */
 .hero h1 {
-  font-size: clamp(2rem, 8vw, 2.7rem);
+  font-size: clamp(2.1rem, 8vw, 3rem);
   font-weight: 700;
   line-height: 1.06;
   letter-spacing: -0.02em;
@@ -378,7 +434,7 @@ main {
 }
 .hero p.lede {
   margin-top: 20px;
-  max-width: 46ch;
+  max-width: 54ch;
   font-size: 1.02rem;
   line-height: 1.7;
   color: var(--ink-soft);
@@ -407,6 +463,9 @@ main {
   font-weight: 700;
   font-size: 1.6rem;
   color: var(--heading);
+  /* The count-up runs through every width of digit on its way to the final
+     value - tabular figures keep the labels below from shuffling sideways. */
+  font-variant-numeric: tabular-nums;
 }
 .hero-fact .l {
   font-size: 0.78rem;
@@ -414,37 +473,52 @@ main {
   margin-top: 2px;
 }
 
-/* Text first, then the mark - mobile-first single column. The two sit
-   side by side once there's room (700px breakpoint below). */
-.hero-layout {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-}
+/* The hero is one column at every width. It used to put the mark in a second
+   column, which made the copy column the narrower half of the widest page on
+   the site for a shape the sidebar and footer already carry. */
 .hero-content {
+  position: relative;
+  z-index: 1;
   min-width: 0;
 }
-.hero-visual {
-  position: relative;
-  width: 100%;
-  max-width: 220px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.hero-visual svg {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: auto;
-}
-.hero-visual-glow {
+
+/* What the mark was actually doing here: warmth. A wash costs no column. */
+.hero-aura {
   position: absolute;
-  inset: 8%;
-  border-radius: 50%;
-  background: radial-gradient(circle, color-mix(in srgb, var(--brand) 20%, transparent) 0%, transparent 70%);
+  /* Centred behind the headline, not the top edge, so what you see is the
+     middle of the glow rather than its cut-off top. Width is capped at 100%
+     of the page column on purpose: bleeding it wider looked better on a
+     desktop mock and put a horizontal scrollbar on a phone. */
+  top: -180px;
+  left: 50%;
+  width: min(820px, 100%);
+  height: 560px;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    color-mix(in srgb, var(--brand) 10%, transparent) 0%,
+    transparent 70%
+  );
   pointer-events: none;
+  z-index: 0;
+}
+
+/* Hero copy arrives in reading order rather than all at once. `backwards`
+   holds the from-state through the delay so nothing flashes in first. */
+.hero-content > * {
+  animation: rise 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
+}
+.hero-content > *:nth-child(2) {
+  animation-delay: 60ms;
+}
+.hero-content > *:nth-child(3) {
+  animation-delay: 120ms;
+}
+.hero-content > *:nth-child(4) {
+  animation-delay: 180ms;
+}
+.hero-content > *:nth-child(5) {
+  animation-delay: 240ms;
 }
 
 /* ---------- Explore grid (Overview page) ---------- */
@@ -515,13 +589,36 @@ main {
 .explore-card:focus-visible {
   border-color: var(--brand);
   box-shadow: var(--shadow);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 .explore-card:hover .explore-card-arrow,
 .explore-card:focus-visible .explore-card-arrow {
   opacity: 1;
   transform: translateX(0);
   color: var(--brand-strong);
+}
+/* The 01-06 index is the closest thing this grid has to a progress marker, so
+   it lights up with the card rather than staying a dim label. */
+.explore-card:hover .explore-card-index,
+.explore-card:focus-visible .explore-card-index {
+  color: var(--brand-strong);
+  opacity: 1;
+}
+.explore-card:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
+
+/* Cards deal themselves in when the grid scrolls into view. useReveal sets
+   data-reveal, so the "pending" state below is only ever reachable with JS
+   running - see the hook for why that is safe on a client-rendered site. */
+[data-reveal] .explore-card {
+  opacity: 0;
+  transform: translateY(14px);
+}
+[data-reveal="in"] .explore-card {
+  animation: rise 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 60ms);
 }
 
 /* ---------- Logo ---------- */
@@ -1113,10 +1210,15 @@ main {
   flex-wrap: wrap;
 }
 .btn {
+  position: relative;
+  /* Clips the sheen on .solid. Focus rings are drawn with `outline`, which is
+     painted outside the box and so survives this. */
+  overflow: hidden;
   font-family: "Poppins", sans-serif;
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  padding: 11px 22px;
+  padding: 12px 24px;
+  gap: 8px;
   border-radius: 100px;
   border: 1px solid transparent;
   cursor: pointer;
@@ -1124,22 +1226,71 @@ main {
   align-items: center;
   justify-content: center;
   transition:
-    background 0.15s ease,
-    border-color 0.15s ease,
-    color 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.15s ease;
+    background 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    box-shadow 0.25s ease,
+    transform 0.18s ease;
+}
+/* An optional glyph, not a pseudo-element, because it says something specific:
+   the direction the button takes you. Down = further down this page, right =
+   somewhere else. It leans that way on hover. */
+.btn-arrow {
+  display: inline-block;
+  font-size: 0.95em;
+  line-height: 1;
+  transition: transform 0.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.btn:hover .btn-arrow,
+.btn:focus-visible .btn-arrow {
+  transform: translateX(3px);
+}
+.btn:hover .btn-arrow.down,
+.btn:focus-visible .btn-arrow.down {
+  transform: translateY(3px);
+}
+/* Hover and focus used to share one rule, which left keyboard users with a
+   colour change and no ring. They are separate now: the ring is the focus
+   state, everything else is the pointer state. */
+.btn:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
 }
 .btn.solid {
   background: var(--brand);
   color: var(--on-brand);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
+/* A single pass of light across the fill on hover. It reads as a highlight in
+   both themes because it is mixed from --on-brand, which already flips with
+   the theme, rather than a hardcoded white. */
+.btn.solid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 34%,
+    color-mix(in srgb, var(--on-brand) 22%, transparent) 50%,
+    transparent 66%
+  );
+  transform: translateX(-130%);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+.btn.solid:hover::after,
+.btn.solid:focus-visible::after {
+  transform: translateX(130%);
+}
 .btn.solid:hover,
 .btn.solid:focus-visible {
   background: var(--brand-strong);
-  box-shadow: var(--shadow);
-  transform: translateY(-1px);
+  /* Tinted from the accent instead of --shadow: a neutral drop shadow under a
+     clay pill on a warm ground read as grime. */
+  box-shadow:
+    0 12px 26px -12px color-mix(in srgb, var(--brand) 70%, transparent),
+    0 2px 6px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
 }
 .btn.outline {
   background: transparent;
@@ -1151,10 +1302,14 @@ main {
   border-color: var(--brand);
   color: var(--brand-strong);
   background: var(--bg-well);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px -14px rgba(0, 0, 0, 0.5);
 }
+/* Press lands the button back down flush - the lift is the only thing hover
+   promised, so taking it away is the whole click feedback. */
 .btn:active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.985);
+  transition-duration: 0.06s;
 }
 .pill-row {
   display: flex;
@@ -1528,21 +1683,7 @@ main {
     font-size: 1.9rem;
   }
   .hero h1 {
-    font-size: clamp(2.2rem, 5vw, 3rem);
-  }
-
-  .hero-layout {
-    flex-direction: row;
-    align-items: center;
-    gap: 40px;
-  }
-  .hero-content {
-    flex: 1.2;
-  }
-  .hero-visual {
-    flex: 0.8;
-    max-width: 260px;
-    margin: 0;
+    font-size: clamp(2.4rem, 5vw, 3.3rem);
   }
 
   .detail-table {
@@ -1601,16 +1742,80 @@ main {
   .shell {
     flex-direction: row;
   }
+  /* Now a real box: a sticky column that owns width/height/position, with
+     `overflow-x: hidden` doing the work of visually retracting `.sidebar`
+     when collapsed (its own min-width holds it at its natural size, so it
+     just slides out of the clipped area rather than reflowing/squishing).
+     `overflow-y: auto` keeps that clip from also cutting off a nav list
+     that's taller than the viewport on a short window. */
+  .sidebar-shell {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    width: 264px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    border-right: 1px solid var(--border);
+    background: var(--bg-sidebar);
+    overflow-x: hidden;
+    overflow-y: auto;
+    transition: width 0.2s ease;
+  }
+  .sidebar-shell[data-open="false"] {
+    width: 56px;
+  }
+  .sidebar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 52px;
+    flex-shrink: 0;
+    /* Sticky within the shell's own scroll area (not the sidebar's height,
+       since that's now `.sidebar`'s job) so the one control that can
+       re-expand a collapsed sidebar never scrolls out of reach behind a
+       long nav list on a short window. */
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-sidebar);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition:
+      background 0.15s ease,
+      color 0.15s ease;
+  }
+  .sidebar-toggle:hover {
+    color: var(--heading);
+    background: var(--bg-well);
+  }
+  .sidebar-toggle svg {
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+  /* Points the same way the panel will open, like a disclosure triangle. */
+  .sidebar-shell[data-open="false"] .sidebar-toggle svg {
+    transform: rotate(180deg);
+  }
   .sidebar {
     width: 264px;
-    flex-shrink: 0;
-    height: 100vh;
+    min-width: 264px;
+    flex: 1;
+    min-height: 0;
     border-bottom: none;
-    border-right: 1px solid var(--border);
-    padding: 28px 22px;
+    padding: 20px 22px 28px;
     flex-direction: column;
     align-items: stretch;
     overflow-x: visible;
+    opacity: 1;
+    transition: opacity 0.15s ease;
+  }
+  .sidebar-shell[data-open="false"] .sidebar {
+    opacity: 0;
   }
   .search-trigger {
     width: 100%;
@@ -1670,9 +1875,6 @@ main {
   .page.hero {
     padding-top: 64px;
   }
-  .hero-visual {
-    max-width: 300px;
-  }
   .explore-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -1690,5 +1892,26 @@ main {
   .footer-inner,
   .footer-bottom {
     max-width: 960px;
+  }
+}
+
+/* ================= Reduced motion ================= */
+/* Everything above is decoration on content that is already in place, so the
+   honest answer to prefers-reduced-motion is to drop the whole lot rather
+   than shorten it. The two reveal states are pinned visible explicitly: with
+   animations disabled, an element left on its from-state would never arrive.
+   useReveal and CountUp also check this query in JS and skip their work. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .hero-content > *,
+  [data-reveal] .explore-card {
+    opacity: 1;
+    transform: none;
   }
 }

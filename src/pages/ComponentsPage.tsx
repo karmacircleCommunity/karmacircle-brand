@@ -17,6 +17,15 @@ const ComponentsPage = () => {
             <button className="btn outline" type="button">
               Cancel
             </button>
+            {/* The arrow is opt-in markup, not automatic on .btn - it belongs
+                on buttons that move you somewhere, and points the way they
+                go: right for elsewhere, down for further down the page. */}
+            <button className="btn solid" type="button">
+              Continue
+              <span className="btn-arrow" aria-hidden="true">
+                &rarr;
+              </span>
+            </button>
           </div>
           <div className="pill-row">
             <span className="pill success">Verified</span>

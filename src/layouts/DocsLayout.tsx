@@ -21,8 +21,16 @@ const YEAR = new Date().getFullYear();
 const DocsLayout = ({ themeMode, onThemeChange, onOpenSearch }: DocsLayoutProps) => {
   return (
     <div className="shell">
+      {/* First focusable thing on the page for keyboard/screen-reader users -
+          lets them jump past the sidebar's nav links straight to the page
+          content instead of tabbing through every one of them first. Only
+          visible once focused, matching the pattern of every other
+          skip-link. */}
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
       <Sidebar themeMode={themeMode} onThemeChange={onThemeChange} onOpenSearch={onOpenSearch} />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <Outlet />
         <footer className="site-footer">
           <div className="footer-inner">

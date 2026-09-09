@@ -10,10 +10,19 @@ interface CommandPaletteProps {
 /** Same grouping/order as NAV_PAGES, just bucketed under their group label. */
 const GROUP_ORDER = ["Foundations", "More"] as const;
 
+const LISTBOX_ID = "cmdk-listbox";
+const optionId = (id: string) => `cmdk-option-${id}`;
+
 const CommandPalette = ({ open, onClose }: CommandPaletteProps) => {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  // The element focused before the palette opened (almost always the
+  // sidebar's Search button, but Cmd/Ctrl+K can fire from anywhere) - Escape
+  // or a selection returns focus there instead of dropping it back to the
+  // top of the document, which is what happens by default once the focused
+  // element (this dialog's input) unmounts.
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
   const navigate = useNavigate();
 
   const results = useMemo(() => {
@@ -31,13 +40,18 @@ const CommandPalette = ({ open, onClose }: CommandPaletteProps) => {
   }, [query]);
 
   const flatResults = useMemo(() => results.flatMap((entry) => entry.pages), [results]);
+  const activeOptionId = flatResults[selected] ? optionId(flatResults[selected].id) : undefined;
 
   useEffect(() => {
     if (open) {
+      previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
       setQuery("");
       setSelected(0);
       // Autofocus needs to wait one tick for the overlay to mount.
       window.requestAnimationFrame(() => inputRef.current?.focus());
+    } else {
+      previouslyFocusedRef.current?.focus();
+      previouslyFocusedRef.current = null;
     }
   }, [open]);
 
@@ -64,6 +78,13 @@ const CommandPalette = ({ open, onClose }: CommandPaletteProps) => {
           navigate(target.path);
           onClose();
         }
+      } else if (event.key === "Tab") {
+        // The search field is the only focusable element in this dialog -
+        // results are chosen with the arrow keys instead, roving via
+        // aria-activedescendant - so Tab has nothing to move to. Without
+        // this it would carry focus out to whatever sits next in the
+        // document, visually hidden behind the overlay.
+        event.preventDefault();
       }
     };
     window.addEventListener("keydown", onKeyDown);
@@ -94,26 +115,44 @@ const CommandPalette = ({ open, onClose }: CommandPaletteProps) => {
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search..."
             aria-label="Search pages"
+            role="combobox"
+            aria-expanded="true"
+            aria-controls={LISTBOX_ID}
+            aria-activedescendant={activeOptionId}
+            aria-autocomplete="list"
             autoComplete="off"
             spellCheck={false}
           />
           <kbd className="cmdk-esc">Esc</kbd>
         </div>
 
-        <div className="cmdk-list" role="listbox">
-          {flatResults.length === 0 && <p className="cmdk-empty">No pages match &ldquo;{query}&rdquo;.</p>}
+        <div className="cmdk-list" id={LISTBOX_ID} role="listbox" aria-label="Pages">
+          {flatResults.length === 0 && (
+            <p className="cmdk-empty" role="status">
+              No pages match &ldquo;{query}&rdquo;.
+            </p>
+          )}
           {results.map((entry) => (
-            <div key={entry.group} className="cmdk-group">
-              <div className="cmdk-group-label">{entry.group}</div>
+            <div key={entry.group} className="cmdk-group" role="group" aria-label={entry.group}>
+              <div className="cmdk-group-label" aria-hidden="true">
+                {entry.group}
+              </div>
               {entry.pages.map((page) => {
                 rowIndex += 1;
                 const isSelected = rowIndex === selected;
                 return (
-                  <button
+                  <div
                     key={page.id}
-                    type="button"
+                    id={optionId(page.id)}
+                    role="option"
+                    aria-selected={isSelected}
                     className={`cmdk-item${isSelected ? " selected" : ""}`}
                     onMouseEnter={() => setSelected(rowIndex)}
+                    onMouseDown={(event) => {
+                      // The input owns focus for the whole interaction -
+                      // don't let a click steal it away first.
+                      event.preventDefault();
+                    }}
                     onClick={() => {
                       navigate(page.path);
                       onClose();
@@ -126,7 +165,7 @@ const CommandPalette = ({ open, onClose }: CommandPaletteProps) => {
                       <span className="cmdk-item-label">{page.label}</span>
                       <span className="cmdk-item-desc">{page.description}</span>
                     </span>
-                  </button>
+                  </div>
                 );
               })}
             </div>
