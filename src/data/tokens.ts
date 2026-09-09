@@ -22,7 +22,7 @@ export const COLOR_GROUPS: ColorGroup[] = [
     description:
       "The one place to edit to retheme the app. Reserved for CTAs, links, active state, not decoration.",
     usage:
-      "Primary buttons, active nav/tab state, links, focus rings. Never a background fill for large areas - it stays rare so it still means something when it shows up.",
+      "Primary buttons, active nav/tab state, links, focus rings. Never a background fill for large areas - it stays rare so it still means something when it shows up. Anything sitting on top of a brand fill takes On brand, never a hardcoded white: brand is dark in light mode but a light tint in dark mode, so white-on-brand drops to 2.87:1 there and fails AA.",
     tokens: [
       { name: "Brand", token: "--color-brand", hex: "#a8623e" },
       { name: "Brand hover", token: "--color-brand-hover", hex: "#8f5236" },
@@ -30,6 +30,12 @@ export const COLOR_GROUPS: ColorGroup[] = [
         name: "Brand secondary",
         token: "--color-brand-secondary",
         hex: "#382c24",
+      },
+      {
+        name: "On brand",
+        token: "--color-on-brand",
+        hex: "#ffffff",
+        onLight: true,
       },
     ],
   },
@@ -63,7 +69,7 @@ export const COLOR_GROUPS: ColorGroup[] = [
         hex: "#fffcf7",
         onLight: true,
       },
-      { name: "Surface dark", token: "--color-surface-dark", hex: "#0e0906" },
+      { name: "Surface dark", token: "--color-surface-dark", hex: "#12100c" },
       {
         name: "Surface muted",
         token: "--color-surface-muted",
@@ -123,6 +129,13 @@ export const BORDER_TOKENS: BorderToken[] = [
     token: "--border-soft",
     swatch: "var(--border-soft)",
     usage: "Quieter separator - inside a card, between rows in a table, never the outer edge.",
+  },
+  {
+    name: "Border strong",
+    token: "--border-strong",
+    swatch: "var(--border-strong)",
+    usage:
+      "The only border weighted to carry an interactive outline, e.g. the outline button. Deliberately not the heading color in dark mode - a near-white hairline on the dark ground measured 17:1 and glared.",
   },
 ];
 

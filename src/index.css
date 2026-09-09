@@ -19,8 +19,16 @@
   --brand: #a8623e;
   --brand-strong: #8f5236;
   --brand-secondary: #382c24;
+  /* Text/icons sitting ON a --brand fill. In light mode --brand is dark
+     enough for white to clear AA (4.69:1); in dark mode --brand is a light
+     tint, so this flips to a deep warm brown instead. Never hardcode #fff
+     on a brand fill - that failed at 2.87:1 in dark mode. */
+  --on-brand: #ffffff;
   --border: #ece5da;
   --border-soft: #f0efef;
+  /* A border strong enough to carry an interactive outline (outline button),
+     as opposed to --border, which only separates surfaces. */
+  --border-strong: #28183b;
   --success: #2e6b4a;
   --error: #a8402f;
   --warning: #8a5a12;
@@ -32,18 +40,20 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0e0906;
-    --bg-raised: #171009;
-    --bg-sidebar: #130d08;
-    --bg-well: #1c140d;
-    --ink: #ece3d8;
+    --bg: #12100c;
+    --bg-raised: #1b1713;
+    --bg-sidebar: #171310;
+    --bg-well: #201b16;
+    --ink: #e4dacd;
     --ink-soft: #a3968a;
     --heading: #f7ecdf;
     --brand: #ce8863;
     --brand-strong: #e0996f;
     --brand-secondary: #eddcc9;
-    --border: #2a2015;
-    --border-soft: #241a12;
+    --on-brand: #251a12;
+    --border: #302519;
+    --border-soft: #281e15;
+    --border-strong: #8a7c6e;
     --success: #63b98c;
     --error: #dd8a76;
     --warning: #d9a24d;
@@ -54,18 +64,20 @@
 }
 
 :root[data-theme="dark"] {
-  --bg: #0e0906;
-  --bg-raised: #171009;
-  --bg-sidebar: #130d08;
-  --bg-well: #1c140d;
-  --ink: #ece3d8;
+  --bg: #12100c;
+  --bg-raised: #1b1713;
+  --bg-sidebar: #171310;
+  --bg-well: #201b16;
+  --ink: #e4dacd;
   --ink-soft: #a3968a;
   --heading: #f7ecdf;
   --brand: #ce8863;
   --brand-strong: #e0996f;
   --brand-secondary: #eddcc9;
-  --border: #2a2015;
-  --border-soft: #241a12;
+  --on-brand: #251a12;
+  --border: #302519;
+  --border-soft: #281e15;
+  --border-strong: #8a7c6e;
   --success: #63b98c;
   --error: #dd8a76;
   --warning: #d9a24d;
@@ -290,6 +302,11 @@ nav.sections a.active {
 main {
   min-width: 0;
   flex: 1;
+  /* Column + `margin-top: auto` on the footer keeps it pinned to the bottom
+     of the viewport on short pages (Voice on a tall monitor left a dead gap
+     under it otherwise) without detaching it on long ones. */
+  display: flex;
+  flex-direction: column;
 }
 .page {
   padding: 44px 20px 64px;
@@ -542,7 +559,7 @@ main {
   background: #fffcf7;
 }
 .logo-tile.dark {
-  background: #0e0906;
+  background: #12100c;
 }
 .logo-tile-label {
   font-family: "IBM Plex Mono", monospace;
@@ -1099,7 +1116,7 @@ main {
 }
 .btn.solid {
   background: var(--brand);
-  color: #fff;
+  color: var(--on-brand);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 .btn.solid:hover,
@@ -1110,7 +1127,7 @@ main {
 }
 .btn.outline {
   background: transparent;
-  border-color: var(--heading);
+  border-color: var(--border-strong);
   color: var(--heading);
 }
 .btn.outline:hover,
@@ -1275,7 +1292,7 @@ main {
   position: relative;
   border-top: 1px solid var(--border);
   background: var(--bg-well);
-  margin-top: 24px;
+  margin-top: auto;
 }
 .site-footer::before {
   content: "";
@@ -1288,99 +1305,59 @@ main {
   opacity: 0.5;
 }
 .footer-inner {
-  padding: 40px 20px;
+  padding: 28px 20px;
   max-width: 880px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 28px;
-}
-.footer-brand {
-  max-width: 40ch;
+  align-items: flex-start;
+  gap: 20px;
 }
 .footer-mark {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 10px;
   text-decoration: none;
+}
+.footer-mark-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
 }
 .footer-mark-word {
   font-family: "Outfit", sans-serif;
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 0.98rem;
   letter-spacing: -0.01em;
   color: var(--heading);
 }
-.footer-brand p {
-  margin: 14px 0 0;
-  font-size: 0.84rem;
-  line-height: 1.6;
+.footer-mark-sub {
+  font-size: 0.76rem;
   color: var(--ink-soft);
 }
-.footer-social {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-.footer-social-link {
+.footer-links {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
-  border: 1px solid var(--border);
-  background: var(--bg-raised);
+  gap: 22px;
+}
+.footer-links a {
+  font-size: 0.84rem;
   color: var(--ink-soft);
   text-decoration: none;
-  transition:
-    border-color 0.15s ease,
-    color 0.15s ease,
-    transform 0.15s ease;
-}
-.footer-social-link:hover,
-.footer-social-link:focus-visible {
-  border-color: var(--brand);
-  color: var(--brand-strong);
-  transform: translateY(-2px);
-}
-.footer-col {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.footer-col-label {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 0.64rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-  opacity: 0.75;
-  margin-bottom: 2px;
-}
-.footer-col a {
-  font-size: 0.86rem;
-  color: var(--ink-soft);
-  text-decoration: none;
-  width: fit-content;
   transition: color 0.15s ease;
 }
-.footer-col a:hover,
-.footer-col a:focus-visible {
+.footer-links a:hover,
+.footer-links a:focus-visible {
   color: var(--brand-strong);
 }
 .footer-bottom {
-  border-top: 1px solid var(--border);
-  padding: 18px 20px 32px;
+  border-top: 1px solid var(--border-soft);
+  padding: 14px 20px 28px;
   max-width: 880px;
   margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 8px;
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   color: var(--ink-soft);
-  opacity: 0.85;
+  opacity: 0.8;
 }
 
 /* ---------- Command palette ---------- */
@@ -1523,22 +1500,13 @@ main {
     padding: 64px 40px 80px;
   }
   .footer-inner {
-    padding: 36px 40px;
+    padding: 30px 40px;
     flex-direction: row;
+    align-items: center;
     justify-content: space-between;
   }
-  .footer-brand {
-    flex: 1.4;
-  }
-  .footer-col {
-    flex: 1;
-  }
-  .footer-social {
-    flex: 1;
-    justify-content: flex-end;
-  }
   .footer-bottom {
-    padding: 18px 40px 36px;
+    padding: 16px 40px 32px;
   }
   .section-head h2 {
     font-size: 1.9rem;

@@ -37,8 +37,9 @@ const MaterialsPage = () => {
       <div className="material-group">
         <h3>Border</h3>
         <p className="material-group-desc">
-          Two weights of the same idea: a hairline for the outer edge of a
-          surface, a quieter one for whatever divides content inside it.
+          Three weights of the same idea: a hairline for the outer edge of a
+          surface, a quieter one for whatever divides content inside it, and a
+          stronger one for borders that have to read as interactive.
         </p>
         <DetailTable
           rows={BORDER_TOKENS.map((token) => ({

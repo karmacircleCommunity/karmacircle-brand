@@ -1,10 +1,25 @@
 import { Link } from "react-router-dom";
 import { useLenis } from "lenis/react";
-import { NAV_PAGES } from "../data/tokens";
+import {
+  BORDER_TOKENS,
+  COLOR_GROUPS,
+  NAV_PAGES,
+  RADIUS_TOKENS,
+  SHADOW_TOKENS,
+} from "../data/tokens";
 import LogoMark from "../components/LogoMark";
 import PageFooterNav from "../components/PageFooterNav";
 
 const EXPLORE_PAGES = NAV_PAGES.filter((page) => page.id !== "overview");
+
+/** Counted off the data rather than typed as prose - the hero hardcoded "14"
+ * while tokens.ts had already grown past it, and nothing caught the drift.
+ * Add a token to tokens.ts and this number follows on its own. */
+const TOKEN_COUNT =
+  COLOR_GROUPS.reduce((sum, group) => sum + group.tokens.length, 0) +
+  RADIUS_TOKENS.length +
+  BORDER_TOKENS.length +
+  SHADOW_TOKENS.length;
 
 const OverviewPage = () => {
   const lenis = useLenis();
@@ -51,7 +66,7 @@ const OverviewPage = () => {
 
           <div className="hero-facts">
             <div className="hero-fact">
-              <div className="n">14</div>
+              <div className="n">{TOKEN_COUNT}</div>
               <div className="l">
                 tokens
                 <br />
