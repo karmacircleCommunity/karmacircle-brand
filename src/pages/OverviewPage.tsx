@@ -1,10 +1,26 @@
 import { Link } from "react-router-dom";
+import { useLenis } from "lenis/react";
 import { NAV_PAGES } from "../data/tokens";
 import PageFooterNav from "../components/PageFooterNav";
 
 const EXPLORE_PAGES = NAV_PAGES.filter((page) => page.id !== "overview");
 
 const OverviewPage = () => {
+  const lenis = useLenis();
+
+  // "Explore the system" stays on the page and scrolls to the grid below
+  // rather than jumping straight into one arbitrary sub-page - the grid is
+  // already the real navigation surface, this button just gets you to it.
+  const handleExploreClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    const target = document.getElementById("explore-heading");
+    if (lenis && target) {
+      lenis.scrollTo(target, { offset: -90 });
+    } else {
+      target?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <div className="page hero">
       <div className="hero-layout">
@@ -25,9 +41,9 @@ const OverviewPage = () => {
           </p>
 
           <div className="hero-cta-row">
-            <Link className="btn solid" to="/colors">
+            <a className="btn solid" href="#explore-heading" onClick={handleExploreClick}>
               Explore the system
-            </Link>
+            </a>
             <Link className="btn outline" to="/components">
               View components
             </Link>
