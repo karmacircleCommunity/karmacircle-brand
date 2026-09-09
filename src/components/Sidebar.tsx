@@ -54,10 +54,6 @@ const Sidebar = ({ themeMode, onThemeChange, onOpenSearch }: SidebarProps) => {
 
       <div className="sidebar-foot">
         <ThemeToggle mode={themeMode} onChange={onThemeChange} />
-        <p className="sidebar-note">
-          The KarmaCircle brand and design system. Tokens mirror{" "}
-          <code>apps/web/src/styles/index.css</code> in the product repo.
-        </p>
       </div>
     </aside>
   );

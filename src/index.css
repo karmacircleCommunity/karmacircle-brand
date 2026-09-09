@@ -115,6 +115,19 @@ button {
   outline: 2px solid var(--brand);
   outline-offset: 2px;
 }
+/* Visually hidden but still readable by screen readers - used where an
+   icon alone carries the meaning on screen (e.g. the theme toggle). */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 /* ---------- Shell (mobile-first: sidebar is a horizontal top bar until 980px) ---------- */
 .shell {
@@ -240,9 +253,6 @@ nav.sections a.active {
   gap: 12px;
   flex-shrink: 0;
 }
-.sidebar-note {
-  display: none;
-}
 .theme-toggle {
   display: flex;
   align-items: center;
@@ -256,19 +266,23 @@ nav.sections a.active {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  width: 30px;
+  height: 30px;
   border: none;
   background: transparent;
   color: var(--ink-soft);
-  font-family: "Outfit", sans-serif;
-  font-size: 0.76rem;
-  padding: 6px 8px;
   border-radius: 6px;
   cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+.theme-toggle button:hover {
+  color: var(--heading);
 }
 .theme-toggle button.active {
   background: var(--bg-raised);
-  color: var(--heading);
+  color: var(--brand-strong);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
@@ -283,7 +297,6 @@ main {
   margin: 0 auto;
 }
 .page.hero {
-  max-width: 720px;
   padding-top: 56px;
 }
 
@@ -341,10 +354,23 @@ main {
   line-height: 1.7;
   color: var(--ink-soft);
 }
+.hero-cta-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 32px;
+}
+.hero-cta-row .btn {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
 .hero-facts {
   display: flex;
   gap: 28px;
-  margin-top: 36px;
+  margin-top: 40px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border-soft);
   flex-wrap: wrap;
 }
 .hero-fact .n {
@@ -357,6 +383,152 @@ main {
   font-size: 0.78rem;
   color: var(--ink-soft);
   margin-top: 2px;
+}
+
+/* Text first, then the mark - mobile-first single column. The two sit
+   side by side once there's room (700px breakpoint below). */
+.hero-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.hero-content {
+  min-width: 0;
+}
+.hero-visual {
+  position: relative;
+  width: 100%;
+  max-width: 220px;
+  margin: 0 auto;
+}
+.hero-visual svg {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.hero-visual-glow {
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--brand) 20%, transparent) 0%, transparent 70%);
+  pointer-events: none;
+}
+.orbit-ring-outer,
+.orbit-ring-inner {
+  fill: none;
+}
+.orbit-ring-outer {
+  stroke: var(--brand);
+  stroke-opacity: 0.35;
+  stroke-width: 1.4;
+}
+.orbit-ring-inner {
+  stroke: var(--border);
+  stroke-width: 1.4;
+  stroke-dasharray: 3 6;
+}
+.orbit-dot {
+  fill: var(--brand);
+}
+.orbit-dot-halo {
+  fill: var(--brand);
+  fill-opacity: 0.14;
+}
+.orbit-center {
+  fill: var(--border);
+}
+.orbit-spin {
+  transform-box: view-box;
+  transform-origin: 120px 120px;
+  animation: orbit-rotate 11s linear infinite;
+}
+@keyframes orbit-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .orbit-spin {
+    animation: none;
+  }
+}
+
+/* ---------- Explore grid (Overview page) ---------- */
+.explore {
+  margin-top: 64px;
+}
+.explore-head {
+  margin-bottom: 22px;
+}
+.explore-head h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-top: 6px;
+}
+.explore-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+.explore-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 22px 44px 20px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--bg-raised);
+  text-decoration: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+.explore-card-index {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  opacity: 0.6;
+  margin-bottom: 6px;
+}
+.explore-card-label {
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--heading);
+}
+.explore-card-desc {
+  font-size: 0.84rem;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.explore-card-arrow {
+  position: absolute;
+  top: 20px;
+  right: 18px;
+  color: var(--ink-soft);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    color 0.15s ease;
+}
+.explore-card:hover,
+.explore-card:focus-visible {
+  border-color: var(--brand);
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+}
+.explore-card:hover .explore-card-arrow,
+.explore-card:focus-visible .explore-card-arrow {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--brand-strong);
 }
 
 /* ---------- Logo ---------- */
@@ -1070,22 +1242,116 @@ main {
   color: var(--brand-strong);
 }
 
-footer.credit {
+.site-footer {
+  position: relative;
   border-top: 1px solid var(--border);
   background: var(--bg-well);
   margin-top: 24px;
 }
-.credit-inner {
-  padding: 20px 20px;
+.site-footer::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--brand) 50%, transparent);
+  opacity: 0.5;
+}
+.footer-inner {
+  padding: 40px 20px;
   max-width: 880px;
   margin: 0 auto;
-  font-size: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.footer-brand {
+  max-width: 40ch;
+}
+.footer-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+}
+.footer-mark-word {
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+  color: var(--heading);
+}
+.footer-brand p {
+  margin: 14px 0 0;
+  font-size: 0.84rem;
+  line-height: 1.6;
   color: var(--ink-soft);
+}
+.footer-social {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.footer-social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--bg-raised);
+  color: var(--ink-soft);
+  text-decoration: none;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+.footer-social-link:hover,
+.footer-social-link:focus-visible {
+  border-color: var(--brand);
+  color: var(--brand-strong);
+  transform: translateY(-2px);
+}
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.footer-col-label {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  opacity: 0.75;
+  margin-bottom: 2px;
+}
+.footer-col a {
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+  text-decoration: none;
+  width: fit-content;
+  transition: color 0.15s ease;
+}
+.footer-col a:hover,
+.footer-col a:focus-visible {
+  color: var(--brand-strong);
+}
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  padding: 18px 20px 32px;
+  max-width: 880px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
-  align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px;
+  font-size: 0.76rem;
+  color: var(--ink-soft);
+  opacity: 0.85;
 }
 
 /* ---------- Command palette ---------- */
@@ -1217,6 +1483,9 @@ footer.credit {
   .hero-facts {
     gap: 40px;
   }
+  .explore-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 /* Tablet: detail tables become real grids, page gets breathing room. */
@@ -1224,14 +1493,43 @@ footer.credit {
   .page {
     padding: 64px 40px 80px;
   }
-  .credit-inner {
-    padding: 24px 40px;
+  .footer-inner {
+    padding: 36px 40px;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .footer-brand {
+    flex: 1.4;
+  }
+  .footer-col {
+    flex: 1;
+  }
+  .footer-social {
+    flex: 1;
+    justify-content: flex-end;
+  }
+  .footer-bottom {
+    padding: 18px 40px 36px;
   }
   .section-head h2 {
     font-size: 1.9rem;
   }
   .hero h1 {
     font-size: clamp(2.2rem, 5vw, 3rem);
+  }
+
+  .hero-layout {
+    flex-direction: row;
+    align-items: center;
+    gap: 40px;
+  }
+  .hero-content {
+    flex: 1.2;
+  }
+  .hero-visual {
+    flex: 0.8;
+    max-width: 260px;
+    margin: 0;
   }
 
   .detail-table {
@@ -1346,16 +1644,8 @@ footer.credit {
   }
   .theme-toggle button {
     flex: 1;
-    padding: 7px 6px;
-  }
-  .sidebar-note {
-    display: block;
-    font-size: 0.72rem;
-    line-height: 1.5;
-    color: var(--ink-soft);
-  }
-  .sidebar-note code {
-    font-size: 0.68rem;
+    width: auto;
+    height: 34px;
   }
 
   main {
@@ -1367,15 +1657,25 @@ footer.credit {
   .page.hero {
     padding-top: 64px;
   }
-  .credit-inner {
-    padding: 28px 64px;
+  .hero-visual {
+    max-width: 300px;
+  }
+  .explore-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .footer-inner {
+    padding: 40px 64px;
+  }
+  .footer-bottom {
+    padding: 20px 64px 40px;
   }
 }
 
 /* Large desktop / 4K: cap line length instead of adding more breakpoints. */
 @media (min-width: 1600px) {
   .page,
-  .credit-inner {
+  .footer-inner,
+  .footer-bottom {
     max-width: 960px;
   }
 }
