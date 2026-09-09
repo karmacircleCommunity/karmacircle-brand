@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useLenis } from "lenis/react";
 import { NAV_PAGES } from "../data/tokens";
+import LogoMark from "../components/LogoMark";
 import PageFooterNav from "../components/PageFooterNav";
 
 const EXPLORE_PAGES = NAV_PAGES.filter((page) => page.id !== "overview");
@@ -27,16 +28,15 @@ const OverviewPage = () => {
         <div className="hero-content">
           <p className="eyebrow">Visual identity</p>
           <h1>
-            One dot,
+            Every NGO,
             <br />
-            walking a <em>circle</em>,
-            <br />
-            never alone.
+            sheltered as <em>one</em>.
           </h1>
           <p className="lede">
-            The mark behind KarmaCircle is a single point orbiting a ring, the
-            same motion that plays behind every organization&apos;s setup flow.
-            This system is built around that idea: one clay accent, a warm dark
+            The mark behind KarmaCircle is three figures standing together
+            under a shared roofline - the charities, the volunteers, and the
+            people who show up for each other, drawn as a single shape. This
+            system is built around that idea: one clay accent, a warm dark
             ground, and enough room for the palette to actually breathe.
           </p>
 
@@ -79,15 +79,7 @@ const OverviewPage = () => {
 
         <div className="hero-visual" aria-hidden="true">
           <div className="hero-visual-glow" />
-          <svg viewBox="0 0 240 240" width="100%" height="100%">
-            <circle cx="120" cy="120" r="94" className="orbit-ring-outer" />
-            <circle cx="120" cy="120" r="66" className="orbit-ring-inner" />
-            <g className="orbit-spin">
-              <circle cx="120" cy="26" r="7" className="orbit-dot" />
-              <circle cx="120" cy="26" r="14" className="orbit-dot-halo" />
-            </g>
-            <circle cx="120" cy="120" r="3" className="orbit-center" />
-          </svg>
+          <LogoMark size={200} />
         </div>
       </div>
 

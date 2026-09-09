@@ -2,17 +2,32 @@ import CodeBlock from "../components/CodeBlock";
 import LogoMark from "../components/LogoMark";
 import PageFooterNav from "../components/PageFooterNav";
 
-const MARK_SVG = `<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="16" cy="16" r="14" stroke="#a8623e" stroke-width="1.6" stroke-opacity="0.55" />
-  <circle cx="16" cy="4" r="3" fill="#a8623e" />
-</svg>`;
-
 const LOCKUP_JSX = `<Link to="/" className="flex items-center gap-2">
   <LogoMark size={24} />
   <span className="font-outfit font-medium">KarmaCircle</span>
 </Link>`;
 
-const SIZES = [16, 24, 32, 48];
+const SIZES = [32, 48, 64, 96];
+
+interface Download {
+  name: string;
+  meta: string;
+  href: string;
+}
+
+const MARK_DOWNLOADS: Download[] = [
+  { name: "Mark, light", meta: "SVG", href: "/brand/mark/karmacircle-mark-light.svg" },
+  { name: "Mark, dark", meta: "SVG", href: "/brand/mark/karmacircle-mark-dark.svg" },
+  { name: "Mark, light", meta: "PNG", href: "/brand/mark/karmacircle-mark-light.png" },
+  { name: "Mark, dark", meta: "PNG", href: "/brand/mark/karmacircle-mark-dark.png" },
+];
+
+const LOCKUP_DOWNLOADS: Download[] = [
+  { name: "Wordmark, light", meta: "SVG", href: "/brand/wordmark/karmacircle-wordmark-light.svg" },
+  { name: "Wordmark, dark", meta: "SVG", href: "/brand/wordmark/karmacircle-wordmark-dark.svg" },
+  { name: "Lockup, light", meta: "PNG", href: "/brand/lockup/karmacircle-lockup-light.png" },
+  { name: "Lockup, dark", meta: "PNG", href: "/brand/lockup/karmacircle-lockup-dark.png" },
+];
 
 const LogoPage = () => {
   return (
@@ -21,26 +36,27 @@ const LogoPage = () => {
         <p className="eyebrow">Foundations</p>
         <h2>Logo</h2>
         <p>
-          The idea on the Overview page - a dot orbiting a ring - as an
-          actual asset: one SVG, a wordmark lockup pattern, and the sizing
-          and spacing rules that keep every copy of it the same one.
+          The idea on the Overview page - a community sheltered together - as
+          an actual asset: one mark, a wordmark lockup pattern, and the
+          sizing and spacing rules that keep every copy of it the same one.
         </p>
       </div>
 
       <div className="logo-group">
         <h3>Mark</h3>
         <p className="logo-group-desc">
-          Two circles, nothing else. The ring sits at 55% opacity so the
-          dot - the part that actually moves in the setup-flow animation -
-          reads as the heavier of the two.
+          Three abstracted figures standing together under a shared
+          roofline, drawn as a single compound shape in one color. There is
+          no ring to separate from a dot here - it's one illustration, not
+          parts to mix and match.
         </p>
         <div className="logo-preview-row">
           <div className="logo-tile light">
-            <LogoMark size={40} tone="light" />
+            <LogoMark size={72} tone="light" />
             <span className="logo-tile-label">On light</span>
           </div>
           <div className="logo-tile dark">
-            <LogoMark size={40} tone="dark" />
+            <LogoMark size={72} tone="dark" />
             <span className="logo-tile-label">On dark</span>
           </div>
         </div>
@@ -52,24 +68,20 @@ const LogoPage = () => {
             </div>
           ))}
         </div>
-        <p>Copy the source SVG directly - this is the exact drawing behind every mark on this site, including the favicon:</p>
-        <CodeBlock code={MARK_SVG}>
-          <span className="line">
-            <span className="ln">1</span>
-            <span className="tok-tag">&lt;svg</span> <span className="tok-attr">viewBox</span>=<span className="tok-str">&quot;0 0 32 32&quot;</span> <span className="tok-attr">fill</span>=<span className="tok-str">&quot;none&quot;</span> <span className="tok-attr">xmlns</span>=<span className="tok-str">&quot;http://www.w3.org/2000/svg&quot;</span>
-            <span className="tok-tag">&gt;</span>
-          </span>
-          <span className="line">
-            <span className="ln">2</span>  <span className="tok-tag">&lt;circle</span> <span className="tok-attr">cx</span>=<span className="tok-str">&quot;16&quot;</span> <span className="tok-attr">cy</span>=<span className="tok-str">&quot;16&quot;</span> <span className="tok-attr">r</span>=<span className="tok-str">&quot;14&quot;</span> <span className="tok-attr">stroke</span>=<span className="tok-str">&quot;#a8623e&quot;</span> <span className="tok-attr">stroke-width</span>=<span className="tok-str">&quot;1.6&quot;</span> <span className="tok-attr">stroke-opacity</span>=<span className="tok-str">&quot;0.55&quot;</span> <span className="tok-tag">/&gt;</span>
-          </span>
-          <span className="line">
-            <span className="ln">3</span>  <span className="tok-tag">&lt;circle</span> <span className="tok-attr">cx</span>=<span className="tok-str">&quot;16&quot;</span> <span className="tok-attr">cy</span>=<span className="tok-str">&quot;4&quot;</span> <span className="tok-attr">r</span>=<span className="tok-str">&quot;3&quot;</span> <span className="tok-attr">fill</span>=<span className="tok-str">&quot;#a8623e&quot;</span> <span className="tok-tag">/&gt;</span>
-          </span>
-          <span className="line">
-            <span className="ln">4</span>
-            <span className="tok-tag">&lt;/svg&gt;</span>
-          </span>
-        </CodeBlock>
+        <p>
+          This is a detailed illustration, not a two-shape glyph - it needs
+          more room than the old mark did. Below 32px the gaps between the
+          three figures start to close up and it reads as a solid blob, so
+          treat 32px as the floor, not 16px.
+        </p>
+        <div className="download-grid">
+          {MARK_DOWNLOADS.map((d) => (
+            <a key={d.href} className="download-link" href={d.href} download>
+              <span className="name">{d.name}</span>
+              <span className="meta">{d.meta}</span>
+            </a>
+          ))}
+        </div>
       </div>
 
       <div className="logo-group">
@@ -83,13 +95,13 @@ const LogoPage = () => {
         <div className="logo-preview-row">
           <div className="logo-tile light">
             <span className="logo-lockup">
-              <LogoMark size={22} tone="light" />
+              <LogoMark size={32} tone="light" />
               <span className="logo-lockup-word">KarmaCircle</span>
             </span>
           </div>
           <div className="logo-tile dark">
             <span className="logo-lockup">
-              <LogoMark size={22} tone="dark" />
+              <LogoMark size={32} tone="dark" />
               <span className="logo-lockup-word">KarmaCircle</span>
             </span>
           </div>
@@ -97,13 +109,13 @@ const LogoPage = () => {
         <div className="logo-preview-row">
           <div className="logo-tile light">
             <span className="logo-lockup stacked">
-              <LogoMark size={26} tone="light" />
+              <LogoMark size={40} tone="light" />
               <span className="logo-lockup-word">KarmaCircle</span>
             </span>
           </div>
           <div className="logo-tile dark">
             <span className="logo-lockup stacked">
-              <LogoMark size={26} tone="dark" />
+              <LogoMark size={40} tone="dark" />
               <span className="logo-lockup-word">KarmaCircle</span>
             </span>
           </div>
@@ -125,24 +137,33 @@ const LogoPage = () => {
             <span className="tok-tag">&lt;/Link&gt;</span>
           </span>
         </CodeBlock>
+        <div className="download-grid">
+          {LOCKUP_DOWNLOADS.map((d) => (
+            <a key={d.href} className="download-link" href={d.href} download>
+              <span className="name">{d.name}</span>
+              <span className="meta">{d.meta}</span>
+            </a>
+          ))}
+        </div>
       </div>
 
       <div className="logo-group">
         <h3>Clear space &amp; minimum size</h3>
         <p className="logo-group-desc">
-          The mark needs room to read as a ring, not a smudge. Clear space
+          The mark needs room for the three figures and the roofline above
+          them to stay legible as separate shapes, not a smudge. Clear space
           is measured in the mark&apos;s own diameter, so it scales with it
           automatically.
         </p>
         <div className="logo-clearspace">
-          <LogoMark size={40} />
+          <LogoMark size={72} />
         </div>
         <p className="logo-clearspace-caption">
           The dashed line is one mark-diameter away on every side - the minimum gap before anything else (text, an edge, another element) may start.
         </p>
         <div className="hero-facts">
           <div className="hero-fact">
-            <div className="n">16px</div>
+            <div className="n">32px</div>
             <div className="l">
               Smallest the mark
               <br />
@@ -158,7 +179,7 @@ const LogoPage = () => {
             </div>
           </div>
           <div className="hero-fact">
-            <div className="n">96px</div>
+            <div className="n">120px</div>
             <div className="l">
               Minimum width for
               <br />
@@ -174,19 +195,19 @@ const LogoPage = () => {
           <div className="rule-col do">
             <h3>Do</h3>
             <ul>
-              <li>Use this SVG or the LogoMark component instead of redrawing the ring and dot by hand - the sidebar&apos;s own copy had drifted from the favicon&apos;s stroke opacity before this page existed to catch it.</li>
-              <li>Keep the ring at reduced opacity and the dot solid - that weight difference is what reads as a dot orbiting a ring, not two identical circles.</li>
+              <li>Use the LogoMark component or the downloadable SVG instead of redrawing the figures by hand - it's one illustrated path, not a shape simple enough to reconstruct from memory.</li>
               <li>Give the mark clear space of at least its own diameter before any edge, text, or other element.</li>
+              <li>Keep it to at least 32px - this is a detailed illustration, and the gaps that separate the three figures close up below that.</li>
               <li>Pair it with the wordmark as live text wherever the surface can render a real font.</li>
             </ul>
           </div>
           <div className="rule-col dont">
             <h3>Don&apos;t</h3>
             <ul>
-              <li>Recolor the ring and dot independently - they&apos;re one mark, not two colors to mix and match.</li>
+              <li>Recolor parts of the mark independently - it's a single fill, not separate elements to mix and match.</li>
               <li>Flatten the wordmark lockup into an image when the surface can render text - a screenshot of a logo can&apos;t be resized without blurring or read by a screen reader.</li>
               <li>Add a drop shadow, gradient, or outline around the mark - the system&apos;s one shadow token is for elevation, not logo decoration.</li>
-              <li>Shrink the mark below 16px - the ring and dot stop reading as two distinct weights below that.</li>
+              <li>Stretch or skew the mark to fit a space - resize it proportionally, or choose a different layout instead.</li>
             </ul>
           </div>
         </div>

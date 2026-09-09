@@ -400,6 +400,9 @@ main {
   width: 100%;
   max-width: 220px;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .hero-visual svg {
   position: relative;
@@ -413,45 +416,6 @@ main {
   border-radius: 50%;
   background: radial-gradient(circle, color-mix(in srgb, var(--brand) 20%, transparent) 0%, transparent 70%);
   pointer-events: none;
-}
-.orbit-ring-outer,
-.orbit-ring-inner {
-  fill: none;
-}
-.orbit-ring-outer {
-  stroke: var(--brand);
-  stroke-opacity: 0.35;
-  stroke-width: 1.4;
-}
-.orbit-ring-inner {
-  stroke: var(--border);
-  stroke-width: 1.4;
-  stroke-dasharray: 3 6;
-}
-.orbit-dot {
-  fill: var(--brand);
-}
-.orbit-dot-halo {
-  fill: var(--brand);
-  fill-opacity: 0.14;
-}
-.orbit-center {
-  fill: var(--border);
-}
-.orbit-spin {
-  transform-box: view-box;
-  transform-origin: 120px 120px;
-  animation: orbit-rotate 11s linear infinite;
-}
-@keyframes orbit-rotate {
-  to {
-    transform: rotate(360deg);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .orbit-spin {
-    animation: none;
-  }
 }
 
 /* ---------- Explore grid (Overview page) ---------- */
@@ -645,6 +609,45 @@ main {
   color: var(--ink-soft);
   margin: 12px 0 32px;
   max-width: 46ch;
+}
+
+/* ---------- Downloads (Logo page) ---------- */
+.download-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+.download-link {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--bg-raised);
+  text-decoration: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.download-link:hover,
+.download-link:focus-visible {
+  border-color: var(--brand);
+  box-shadow: var(--shadow);
+}
+.download-link .name {
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  font-size: 0.86rem;
+  color: var(--heading);
+}
+.download-link .meta {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
 }
 
 /* ---------- Colors ---------- */
