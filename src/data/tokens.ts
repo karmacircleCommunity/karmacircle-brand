@@ -59,7 +59,7 @@ export const COLOR_GROUPS: ColorGroup[] = [
     description:
       "Two page grounds, a warm cream for light, a near-black for full-bleed dark panels, plus the grays between them.",
     usage:
-      "Ink and Heading carry body text and titles. Surface/Surface dark are the page background in each theme. Surface muted and Border muted separate cards and inputs from that background without a hard black border.",
+      "Ink and Heading carry body text and titles. Surface is the page ground. Surface dark is not a dark-mode ground - the product has no dark mode; it's the warm near-black used for full-bleed dark panels sitting on that light page (the footer, the auth split panel, the open-source inset card). This documentation site has its own light/dark toggle, and its dark chrome is deliberately a slightly lifted tone, not this token. Surface muted and Border muted separate cards and inputs from the background without a hard black border.",
     tokens: [
       { name: "Ink", token: "--color-ink", hex: "#212529" },
       { name: "Heading", token: "--color-heading", hex: "#28183b" },
@@ -69,7 +69,7 @@ export const COLOR_GROUPS: ColorGroup[] = [
         hex: "#fffcf7",
         onLight: true,
       },
-      { name: "Surface dark", token: "--color-surface-dark", hex: "#12100c" },
+      { name: "Surface dark", token: "--color-surface-dark", hex: "#0e0906" },
       {
         name: "Surface muted",
         token: "--color-surface-muted",

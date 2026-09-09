@@ -7,6 +7,18 @@
  * this is a separate repository specifically so this site's design can
  * move independently, which means nothing enforces the two staying
  * identical. If a brand color changes in the product, update it here too.
+ *
+ * Two deliberate exceptions, so nobody "re-syncs" them by mistake:
+ *
+ * 1. The dark block below is THIS SITE'S dark theme. The product has no
+ *    dark mode at all - its `--color-surface-dark` (#0e0906) is a dark
+ *    panel that sits on a light page (footer, auth split panel), not a
+ *    page ground. This site's dark --bg is #12100c: slightly lifted,
+ *    because body text on #0e0906 measured 15.6:1 and halated. Copying
+ *    #12100c back into the product would change its footer for no reason.
+ *
+ * 2. `--on-brand` and `--border-strong` are new here and have no product
+ *    equivalent yet. See D14 in the product repo's drift register.
  */
 :root {
   --bg: #fffcf7;
@@ -558,8 +570,12 @@ main {
 .logo-tile.light {
   background: #fffcf7;
 }
+/* Pinned to the product's --color-surface-dark (#0e0906), not this site's own
+   dark chrome (--bg, #12100c). The pair of tiles shows the mark on the two
+   grounds the product actually ships: the cream page and the near-black
+   panel. */
 .logo-tile.dark {
-  background: #12100c;
+  background: #0e0906;
 }
 .logo-tile-label {
   font-family: "IBM Plex Mono", monospace;
