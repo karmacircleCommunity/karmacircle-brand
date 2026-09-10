@@ -324,6 +324,15 @@ main {
   flex-direction: column;
 }
 .page {
+  /* Explicit, not just relying on `main`'s flex stretch to imply it: with
+     `main { display: flex; flex-direction: column }`, a stretched-but-auto
+     width on `.page` doesn't reliably stay constrained once a descendant
+     like `.code-block` (`overflow-x: auto` around `white-space: pre`
+     content) is in the mix - the browser was sizing `.page` to that
+     content's width instead of the viewport, blowing out every page with a
+     code sample into horizontal scroll on mobile. An explicit width
+     removes the ambiguity. */
+  width: 100%;
   padding: 44px 20px 64px;
   max-width: 880px;
   margin: 0 auto;
