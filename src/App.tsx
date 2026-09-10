@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { useLenis } from "lenis/react";
 import DocsLayout from "./layouts/DocsLayout";
-import CommandPalette from "./components/CommandPalette";
 import { useTheme } from "./hooks/useTheme";
 import OverviewPage from "./pages/OverviewPage";
 import LogoPage from "./pages/LogoPage";
@@ -14,7 +13,6 @@ import VoicePage from "./pages/VoicePage";
 
 const App = () => {
   const { mode, setMode } = useTheme();
-  const [searchOpen, setSearchOpen] = useState(false);
   const location = useLocation();
   const lenis = useLenis();
 
@@ -42,36 +40,18 @@ const App = () => {
     return () => window.removeEventListener("focusin", resync);
   }, [lenis]);
 
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      const isCombo = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k";
-      if (isCombo) {
-        event.preventDefault();
-        setSearchOpen((open) => !open);
-      }
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
-
-  const openSearch = useCallback(() => setSearchOpen(true), []);
-  const closeSearch = useCallback(() => setSearchOpen(false), []);
-
   return (
-    <>
-      <Routes>
-        <Route element={<DocsLayout themeMode={mode} onThemeChange={setMode} onOpenSearch={openSearch} />}>
-          <Route index element={<OverviewPage />} />
-          <Route path="logo" element={<LogoPage />} />
-          <Route path="colors" element={<ColorsPage />} />
-          <Route path="typography" element={<TypographyPage />} />
-          <Route path="materials" element={<MaterialsPage />} />
-          <Route path="components" element={<ComponentsPage />} />
-          <Route path="voice" element={<VoicePage />} />
-        </Route>
-      </Routes>
-      <CommandPalette open={searchOpen} onClose={closeSearch} />
-    </>
+    <Routes>
+      <Route element={<DocsLayout themeMode={mode} onThemeChange={setMode} />}>
+        <Route index element={<OverviewPage />} />
+        <Route path="logo" element={<LogoPage />} />
+        <Route path="colors" element={<ColorsPage />} />
+        <Route path="typography" element={<TypographyPage />} />
+        <Route path="materials" element={<MaterialsPage />} />
+        <Route path="components" element={<ComponentsPage />} />
+        <Route path="voice" element={<VoicePage />} />
+      </Route>
+    </Routes>
   );
 };
 

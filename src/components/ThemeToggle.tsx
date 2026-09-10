@@ -9,7 +9,8 @@ interface ThemeToggleProps {
 /** Sun / moon / monitor - the same iconography every OS theme picker uses,
  * so the control reads as "pick a theme" on sight instead of needing a
  * text label to explain itself. Each is a plain stroke icon (1.4 weight,
- * currentColor) to match the search icon in the sidebar above it. */
+ * currentColor) to match the sidebar's other icon-based control, the
+ * collapse toggle. */
 const ICONS: Record<ThemeMode, ReactNode> = {
   light: (
     <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">

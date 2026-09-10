@@ -238,42 +238,6 @@ button {
   margin-top: 1px;
 }
 
-.search-trigger {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-  background: var(--bg-raised);
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  padding: 7px 10px;
-  color: var(--ink-soft);
-  cursor: pointer;
-  font-size: 0.82rem;
-  transition:
-    border-color 0.15s ease,
-    color 0.15s ease;
-}
-.search-trigger svg {
-  flex-shrink: 0;
-}
-.search-trigger span {
-  display: none;
-}
-.search-trigger kbd {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 0.68rem;
-  background: var(--bg-well);
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  padding: 2px 5px;
-  color: var(--ink-soft);
-}
-.search-trigger:hover {
-  border-color: var(--brand);
-  color: var(--heading);
-}
-
 nav.sections {
   display: flex;
   align-items: center;
@@ -1531,124 +1495,6 @@ main {
   opacity: 0.8;
 }
 
-/* ---------- Command palette ---------- */
-.cmdk-overlay {
-  position: fixed;
-  inset: 0;
-  background: color-mix(in srgb, var(--brand-secondary) 45%, transparent);
-  backdrop-filter: blur(2px);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 76px 16px 16px;
-  z-index: 100;
-}
-.cmdk-modal {
-  width: min(600px, 100%);
-  max-height: min(70vh, 520px);
-  background: var(--bg-raised);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-.cmdk-input-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--border-soft);
-  color: var(--ink-soft);
-  flex-shrink: 0;
-}
-.cmdk-input-row input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  outline: none;
-  font-family: "Outfit", sans-serif;
-  font-size: 1rem;
-  color: var(--heading);
-}
-.cmdk-input-row input::placeholder {
-  color: var(--ink-soft);
-}
-.cmdk-esc {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 0.68rem;
-  background: var(--bg-well);
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  padding: 2px 6px;
-  color: var(--ink-soft);
-  flex-shrink: 0;
-}
-.cmdk-list {
-  overflow-y: auto;
-  padding: 8px;
-}
-.cmdk-group + .cmdk-group {
-  margin-top: 4px;
-}
-.cmdk-group-label {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 0.66rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-  padding: 8px 10px 4px;
-}
-.cmdk-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  width: 100%;
-  text-align: left;
-  border: none;
-  background: transparent;
-  border-radius: 10px;
-  padding: 9px 10px;
-  cursor: pointer;
-  color: var(--ink);
-}
-.cmdk-item.selected,
-.cmdk-item:hover {
-  background: var(--bg-well);
-}
-.cmdk-item-arrow {
-  color: var(--ink-soft);
-  flex-shrink: 0;
-  line-height: 1.5;
-}
-.cmdk-item-text {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 0;
-}
-.cmdk-item-label {
-  font-family: "Outfit", sans-serif;
-  font-weight: 500;
-  font-size: 0.92rem;
-  color: var(--heading);
-}
-.cmdk-item-desc {
-  font-size: 0.78rem;
-  color: var(--ink-soft);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.cmdk-empty {
-  padding: 24px 10px;
-  text-align: center;
-  font-size: 0.86rem;
-  color: var(--ink-soft);
-  margin: 0;
-}
-
 /* ================= Breakpoints (mobile-first) ================= */
 
 /* Small tablets: two-up cards start to make sense. */
@@ -1764,24 +1610,35 @@ main {
     transition: width 0.2s ease;
   }
   .sidebar-shell[data-open="false"] {
-    width: 56px;
+    width: 60px;
   }
+  /* A small icon button parked in its own top-right corner instead of a
+     full-width, center-icon header bar - the same modest weight a collapse
+     affordance gets in Linear/Notion, one control among several rather than
+     the thing that dominates the top of the sidebar. Still a `position:
+     sticky` flex item (not `absolute`) so it keeps its place in the
+     scrollable column and stays reachable - never scrolling out of reach
+     behind a long nav list on a short window - exactly like the header bar
+     it replaces did; only its size and alignment change. It also stays
+     outside `.sidebar` so it's still reachable while that panel is `inert`
+     during collapse - see the DESKTOP_QUERY comment in Sidebar.tsx. */
   .sidebar-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    min-height: 52px;
+    align-self: flex-end;
+    width: 30px;
+    height: 30px;
+    margin: 14px 15px 0 0;
     flex-shrink: 0;
-    /* Sticky within the shell's own scroll area (not the sidebar's height,
-       since that's now `.sidebar`'s job) so the one control that can
-       re-expand a collapsed sidebar never scrolls out of reach behind a
-       long nav list on a short window. */
     position: sticky;
-    top: 0;
+    top: 14px;
     z-index: 1;
     border: none;
-    border-bottom: 1px solid var(--border);
+    border-radius: 8px;
+    /* Not transparent: this box stays visible while it's `position: sticky`
+       and the nav list scrolls past underneath it, so it needs an opaque
+       backing rather than letting scrolled content show through. */
     background: var(--bg-sidebar);
     color: var(--ink-soft);
     cursor: pointer;
@@ -1807,7 +1664,7 @@ main {
     flex: 1;
     min-height: 0;
     border-bottom: none;
-    padding: 20px 22px 28px;
+    padding: 12px 22px 28px;
     flex-direction: column;
     align-items: stretch;
     overflow-x: visible;
@@ -1816,15 +1673,6 @@ main {
   }
   .sidebar-shell[data-open="false"] .sidebar {
     opacity: 0;
-  }
-  .search-trigger {
-    width: 100%;
-    justify-content: flex-start;
-    padding: 8px 10px;
-  }
-  .search-trigger span {
-    display: inline;
-    flex: 1;
   }
   nav.sections {
     flex-direction: column;

@@ -152,7 +152,7 @@ export const SHADOW_TOKENS: ShadowToken[] = [
     token: "--shadow",
     value: "0 24px 48px -28px rgba(56, 44, 36, 0.28)",
     usage:
-      "One elevation, used sparingly - a swatch on hover, a toast, the search palette. Not a scale: if something needs more lift than this, it's a sign the layout needs rethinking, not a bigger shadow.",
+      "One elevation, used sparingly - a card on hover, a toast, a download link on focus. Not a scale: if something needs more lift than this, it's a sign the layout needs rethinking, not a bigger shadow.",
   },
 ];
 

@@ -9,7 +9,6 @@ import ThemeToggle from "./ThemeToggle";
 interface SidebarProps {
   themeMode: ThemeMode;
   onThemeChange: (mode: ThemeMode) => void;
-  onOpenSearch: () => void;
 }
 
 const GROUPS = ["Foundations", "More"] as const;
@@ -32,8 +31,7 @@ const SidebarToggleIcon = () => (
   </svg>
 );
 
-const Sidebar = ({ themeMode, onThemeChange, onOpenSearch }: SidebarProps) => {
-  const isMac = typeof navigator !== "undefined" && /mac/i.test(navigator.platform);
+const Sidebar = ({ themeMode, onThemeChange }: SidebarProps) => {
   const { open, toggle } = useSidebar();
   const isDesktop = useMediaQuery(DESKTOP_QUERY);
   // Collapse is a desktop-only concept - on the mobile top bar the panel is
@@ -67,15 +65,6 @@ const Sidebar = ({ themeMode, onThemeChange, onOpenSearch }: SidebarProps) => {
             <span className="mark-sub">Brand system</span>
           </span>
         </NavLink>
-
-        <button type="button" className="search-trigger" onClick={onOpenSearch}>
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <circle cx="7" cy="7" r="5.25" stroke="currentColor" strokeWidth="1.4" />
-            <path d="M11 11L14.5 14.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-          </svg>
-          <span>Search</span>
-          <kbd>{isMac ? "⌘K" : "Ctrl K"}</kbd>
-        </button>
 
         <nav className="sections" aria-label="Sections">
           {GROUPS.map((group) => (

@@ -6,7 +6,6 @@ import type { ThemeMode } from "../hooks/useTheme";
 interface DocsLayoutProps {
   themeMode: ThemeMode;
   onThemeChange: (mode: ThemeMode) => void;
-  onOpenSearch: () => void;
 }
 
 const YEAR = new Date().getFullYear();
@@ -18,7 +17,7 @@ const YEAR = new Date().getFullYear();
  * above this - a third copy of the same links was pure noise. What's left is
  * identity, the two off-site destinations, and the copyright.
  */
-const DocsLayout = ({ themeMode, onThemeChange, onOpenSearch }: DocsLayoutProps) => {
+const DocsLayout = ({ themeMode, onThemeChange }: DocsLayoutProps) => {
   return (
     <div className="shell">
       {/* First focusable thing on the page for keyboard/screen-reader users -
@@ -29,7 +28,7 @@ const DocsLayout = ({ themeMode, onThemeChange, onOpenSearch }: DocsLayoutProps)
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
-      <Sidebar themeMode={themeMode} onThemeChange={onThemeChange} onOpenSearch={onOpenSearch} />
+      <Sidebar themeMode={themeMode} onThemeChange={onThemeChange} />
       <main id="main-content" tabIndex={-1}>
         <Outlet />
         <footer className="site-footer">
